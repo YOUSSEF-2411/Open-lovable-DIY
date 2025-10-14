@@ -120,6 +120,9 @@ export async function POST(request: NextRequest) {
     }
     
     console.log('[analyze-edit-intent] Using AI model:', model);
+    if (model.startsWith('openrouter/') || openrouterModel) {
+      console.log('[analyze-edit-intent] OpenRouter chosen model:', (openrouterModel || model).replace('openrouter/', ''));
+    }
     
     // Use AI to create a search plan
     const result = await generateObject({

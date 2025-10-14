@@ -92,6 +92,9 @@ export async function POST(request: NextRequest) {
     const apiKeysFromHeaders = getAllApiKeysFromHeaders(request);
     const apiKeysFromBody = getAllApiKeysFromBody(body);
     const apiKeys = { ...apiKeysFromHeaders, ...apiKeysFromBody };
+    if (!apiKeys.openrouter) {
+      console.error('[generate-ai-code-stream] Missing OpenRouter API key');
+    }
 
     // Create AI clients with dynamic API keys
     const { groq, anthropic, openai, openrouter } = createAIClients(apiKeys);
@@ -1194,14 +1197,17 @@ CRITICAL: When files are provided in the context:
           modelProvider = openai;
         } else if (isOpenRouter) {
           if (!openrouter) {
+            console.error('[generate-ai-code-stream] OpenRouter client not configured');
             return NextResponse.json({ error: 'OpenRouter API key is required for this model' }, { status: 400 });
           }
           modelProvider = openrouter;
         } else {
-          if (!groq) {
-            return NextResponse.json({ error: 'Groq API key is required for this model' }, { status: 400 });
+          // Force OpenRouter-only flow
+          if (!openrouter) {
+            console.error('[generate-ai-code-stream] Defaulted to OpenRouter but no key present');
+            return NextResponse.json({ error: 'OpenRouter API key is required' }, { status: 400 });
           }
-          modelProvider = groq;
+          modelProvider = openrouter;
         }
 
         let actualModel = userProvidedOpenRouterModel ? userProvidedOpenRouterModel :
@@ -1214,6 +1220,8 @@ CRITICAL: When files are provided in the context:
           actualModel = 'meta-llama/llama-3.1-8b-instruct:free';
         }
 
+        console.log('[generate-ai-code-stream] Provider:', isAnthropic ? 'anthropic' : isOpenAI ? 'openai' : 'openrouter');
+        console.log('[generate-ai-code-stream] Model:', actualModel);
         // Make streaming API call with appropriate provider
         const streamOptions: any = {
           model: modelProvider(actualModel),

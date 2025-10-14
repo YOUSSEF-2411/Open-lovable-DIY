@@ -210,29 +210,6 @@ export function ApiKeysSettings({ onClose }: ApiKeysSettingsProps) {
               OpenRouter models are enabled below. You no longer need to type model names.
             </p>
             <div className="space-y-4">
-              <ApiKeyInput
-                label="Anthropic API Key"
-                description="For Claude models"
-                placeholder="sk-ant-..."
-                value={localKeys.anthropic || ''}
-                onChange={(value) => handleKeyChange('anthropic', value)}
-                onValidate={() => handleValidateKey('anthropic')}
-                isValidating={isValidating}
-                validationResult={validationResults.anthropic}
-                getApiUrl="https://console.anthropic.com/keys"
-              />
-
-              <ApiKeyInput
-                label="OpenAI API Key"
-                description="For GPT models"
-                placeholder="sk-..."
-                value={localKeys.openai || ''}
-                onChange={(value) => handleKeyChange('openai', value)}
-                onValidate={() => handleValidateKey('openai')}
-                isValidating={isValidating}
-                validationResult={validationResults.openai}
-                getApiUrl="https://platform.openai.com/api-keys"
-              />
 
               <ApiKeyInput
                 label="OpenRouter API Key"
