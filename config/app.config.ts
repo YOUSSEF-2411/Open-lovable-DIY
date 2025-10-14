@@ -28,20 +28,16 @@ export const appConfig = {
   // AI Model Configuration
   ai: {
     // Default AI model
-    defaultModel: 'openrouter/deepseek/deepseek-chat-v3.1:free',
+    defaultModel: 'openai/gpt-oss-20b:free',
     
     // Available models
     availableModels: [
-      'openrouter/deepseek/deepseek-chat-v3.1:free',
-      'openrouter/z-ai/glm-4.5-air:free',
-      'openrouter/moonshotai/kimi-k2:free'
+      'openai/gpt-oss-20b:free'
     ],
     
     // Model display names
     modelDisplayNames: {
-      'openrouter/deepseek/deepseek-chat-v3.1:free': 'OpenRouter · DeepSeek Chat v3.1 (free)',
-      'openrouter/z-ai/glm-4.5-air:free': 'OpenRouter · GLM 4.5 Air (free)',
-      'openrouter/moonshotai/kimi-k2:free': 'OpenRouter · Kimi K2 (free)'
+      'openai/gpt-oss-20b:free': 'GPT-OSS 20B (free)'
     },
     
     // Temperature settings for non-reasoning models

@@ -92,9 +92,6 @@ export async function POST(request: NextRequest) {
     const apiKeysFromHeaders = getAllApiKeysFromHeaders(request);
     const apiKeysFromBody = getAllApiKeysFromBody(body);
     const apiKeys = { ...apiKeysFromHeaders, ...apiKeysFromBody };
-    if (!apiKeys.openrouter) {
-      console.error('[generate-ai-code-stream] Missing OpenRouter API key');
-    }
 
     // Create AI clients with dynamic API keys
     const { groq, anthropic, openai, openrouter } = createAIClients(apiKeys);
@@ -1202,12 +1199,11 @@ CRITICAL: When files are provided in the context:
           }
           modelProvider = openrouter;
         } else {
-          // Force OpenRouter-only flow
-          if (!openrouter) {
-            console.error('[generate-ai-code-stream] Defaulted to OpenRouter but no key present');
-            return NextResponse.json({ error: 'OpenRouter API key is required' }, { status: 400 });
+          // Default to Groq for everything else (covers openai/gpt-oss-20b:free)
+          if (!groq) {
+            return NextResponse.json({ error: 'Groq API key is required for this model' }, { status: 400 });
           }
-          modelProvider = openrouter;
+          modelProvider = groq;
         }
 
         let actualModel = userProvidedOpenRouterModel ? userProvidedOpenRouterModel :
