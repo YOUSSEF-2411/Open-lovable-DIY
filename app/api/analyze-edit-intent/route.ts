@@ -19,6 +19,11 @@ const openai = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
   baseURL: process.env.OPENAI_BASE_URL,
 });
+// Use OpenAI client for OpenRouter with baseURL override
+const openrouter = createOpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1',
+});
 
 // Schema for the AI's search plan - not file selection!
 const searchPlanSchema = z.object({
@@ -96,12 +101,14 @@ export async function POST(request: NextRequest) {
     let aiModel: LanguageModel;
     if (model.startsWith('anthropic/')) {
       aiModel = anthropic(model.replace('anthropic/', ''));
-    } else if (model.startsWith('openai/')) {
+  } else if (model.startsWith('openai/')) {
       if (model.includes('gpt-oss')) {
         aiModel = groq(model);
       } else {
         aiModel = openai(model.replace('openai/', ''));
       }
+    } else if (model.startsWith('openrouter/')) {
+      aiModel = openrouter(model.replace('openrouter/', ''));
     } else {
       // Default to groq if model format is unclear
       aiModel = groq(model);

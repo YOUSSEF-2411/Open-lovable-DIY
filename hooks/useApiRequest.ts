@@ -25,6 +25,9 @@ export function useApiRequest() {
     if (apiKeys.openai) {
       headers.set('x-openai-api-key', apiKeys.openai);
     }
+    if (apiKeys.openrouter) {
+      headers.set('x-openrouter-api-key', apiKeys.openrouter);
+    }
     if (apiKeys.gemini) {
       headers.set('x-gemini-api-key', apiKeys.gemini);
     }
@@ -44,6 +47,7 @@ export function useApiRequest() {
       e2bApiKey: apiKeys.e2b,
       anthropicApiKey: apiKeys.anthropic,
       openaiApiKey: apiKeys.openai,
+      openrouterApiKey: apiKeys.openrouter,
       geminiApiKey: apiKeys.gemini,
     };
 

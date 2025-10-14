@@ -33,6 +33,8 @@ export const appConfig = {
     // Available models
     availableModels: [
       'openai/gpt-5',
+      'openrouter/meta-llama/llama-3.1-8b-instruct:free',
+      'openrouter/anthropic/claude-3.7-sonnet',
       'moonshotai/kimi-k2-instruct',
       'anthropic/claude-sonnet-4-20250514',
       'google/gemini-2.5-pro'
@@ -41,6 +43,8 @@ export const appConfig = {
     // Model display names
     modelDisplayNames: {
       'openai/gpt-5': 'GPT-5',
+      'openrouter/meta-llama/llama-3.1-8b-instruct:free': 'OpenRouter · Llama 3.1 8B (free)',
+      'openrouter/anthropic/claude-3.7-sonnet': 'OpenRouter · Claude 3.7 Sonnet',
       'moonshotai/kimi-k2-instruct': 'Kimi K2 Instruct',
       'anthropic/claude-sonnet-4-20250514': 'Sonnet 4',
       'google/gemini-2.5-pro': 'Gemini 2.5 Pro'

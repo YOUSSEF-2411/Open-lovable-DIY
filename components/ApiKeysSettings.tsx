@@ -235,6 +235,18 @@ export function ApiKeysSettings({ onClose }: ApiKeysSettingsProps) {
               />
 
               <ApiKeyInput
+                label="OpenRouter API Key"
+                description="Use hundreds of models via OpenRouter"
+                placeholder="sk-or-..."
+                value={localKeys.openrouter || ''}
+                onChange={(value) => handleKeyChange('openrouter', value)}
+                onValidate={() => handleValidateKey('openrouter')}
+                isValidating={isValidating}
+                validationResult={validationResults.openrouter}
+                getApiUrl="https://openrouter.ai/keys"
+              />
+
+              <ApiKeyInput
                 label="Google Gemini API Key"
                 description="For Gemini models"
                 placeholder="AI..."

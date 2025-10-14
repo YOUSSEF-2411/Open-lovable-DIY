@@ -10,6 +10,7 @@ import {
   getMissingRequiredApiKeys,
   validateGroqApiKey,
   validateE2bApiKey,
+  validateOpenrouterApiKey,
   ApiKeyValidationResult
 } from '@/lib/api-keys';
 
@@ -92,6 +93,9 @@ export function ApiKeysProvider({ children }: ApiKeysProviderProps) {
           break;
         case 'e2b':
           result = await validateE2bApiKey(key);
+          break;
+        case 'openrouter':
+          result = await validateOpenrouterApiKey(key);
           break;
         default:
           result = { isValid: true }; // For optional keys, assume valid if provided

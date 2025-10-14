@@ -16,6 +16,7 @@ function createAIClients(apiKeys: {
   groq?: string;
   anthropic?: string;
   openai?: string;
+  openrouter?: string;
 }) {
   const groq = apiKeys.groq ? createGroq({ apiKey: apiKeys.groq }) : null;
   const anthropic = apiKeys.anthropic ? createAnthropic({
@@ -25,8 +26,13 @@ function createAIClients(apiKeys: {
   const openai = apiKeys.openai ? createOpenAI({
     apiKey: apiKeys.openai,
   }) : null;
+  // OpenRouter exposes OpenAI-compatible API. Use OpenAI client with baseURL
+  const openrouter = apiKeys.openrouter ? createOpenAI({
+    apiKey: apiKeys.openrouter,
+    baseURL: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1',
+  }) : null;
 
-  return { groq, anthropic, openai };
+  return { groq, anthropic, openai, openrouter };
 }
 
 // Helper function to analyze user preferences from conversation history
@@ -84,7 +90,7 @@ export async function POST(request: NextRequest) {
     const apiKeys = { ...apiKeysFromHeaders, ...apiKeysFromBody };
 
     // Create AI clients with dynamic API keys
-    const { groq, anthropic, openai } = createAIClients(apiKeys);
+    const { groq, anthropic, openai, openrouter } = createAIClients(apiKeys);
     
     console.log('[generate-ai-code-stream] Received request:');
     console.log('[generate-ai-code-stream] - prompt:', prompt);
@@ -1168,6 +1174,7 @@ CRITICAL: When files are provided in the context:
         // Determine which provider to use based on model
         const isAnthropic = model.startsWith('anthropic/');
         const isOpenAI = model.startsWith('openai/gpt-5');
+        const isOpenRouter = model.startsWith('openrouter/');
 
         let modelProvider;
         if (isAnthropic) {
@@ -1180,6 +1187,11 @@ CRITICAL: When files are provided in the context:
             return NextResponse.json({ error: 'OpenAI API key is required for this model' }, { status: 400 });
           }
           modelProvider = openai;
+        } else if (isOpenRouter) {
+          if (!openrouter) {
+            return NextResponse.json({ error: 'OpenRouter API key is required for this model' }, { status: 400 });
+          }
+          modelProvider = openrouter;
         } else {
           if (!groq) {
             return NextResponse.json({ error: 'Groq API key is required for this model' }, { status: 400 });
@@ -1188,6 +1200,7 @@ CRITICAL: When files are provided in the context:
         }
 
         const actualModel = isAnthropic ? model.replace('anthropic/', '') :
+                           isOpenRouter ? model.replace('openrouter/', '') :
                            (model === 'openai/gpt-5') ? 'gpt-5' : model;
 
         // Make streaming API call with appropriate provider

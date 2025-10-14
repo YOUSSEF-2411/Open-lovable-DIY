@@ -11,6 +11,7 @@ export interface ApiKeyHeaders {
   'x-anthropic-api-key'?: string;
   'x-openai-api-key'?: string;
   'x-gemini-api-key'?: string;
+  'x-openrouter-api-key'?: string;
 }
 
 /**
@@ -18,7 +19,7 @@ export interface ApiKeyHeaders {
  */
 export function getApiKey(
   request: NextRequest,
-  provider: 'groq' | 'e2b' | 'anthropic' | 'openai' | 'gemini'
+  provider: 'groq' | 'e2b' | 'anthropic' | 'openai' | 'gemini' | 'openrouter'
 ): string | undefined {
   // First try to get from headers
   const headerKey = `x-${provider}-api-key`;
@@ -38,7 +39,7 @@ export function getApiKey(
  */
 export function getApiKeyFromBody(
   body: any,
-  provider: 'groq' | 'e2b' | 'anthropic' | 'openai' | 'gemini'
+  provider: 'groq' | 'e2b' | 'anthropic' | 'openai' | 'gemini' | 'openrouter'
 ): string | undefined {
   // First try to get from body
   const bodyKey = `${provider}ApiKey`;
@@ -60,6 +61,7 @@ export function getAllApiKeysFromHeaders(request: NextRequest): {
   anthropic?: string;
   openai?: string;
   gemini?: string;
+  openrouter?: string;
 } {
   return {
     groq: getApiKey(request, 'groq'),
@@ -67,6 +69,7 @@ export function getAllApiKeysFromHeaders(request: NextRequest): {
     anthropic: getApiKey(request, 'anthropic'),
     openai: getApiKey(request, 'openai'),
     gemini: getApiKey(request, 'gemini'),
+    openrouter: getApiKey(request, 'openrouter'),
   };
 }
 
@@ -79,6 +82,7 @@ export function getAllApiKeysFromBody(body: any): {
   anthropic?: string;
   openai?: string;
   gemini?: string;
+  openrouter?: string;
 } {
   return {
     groq: getApiKeyFromBody(body, 'groq'),
@@ -86,6 +90,7 @@ export function getAllApiKeysFromBody(body: any): {
     anthropic: getApiKeyFromBody(body, 'anthropic'),
     openai: getApiKeyFromBody(body, 'openai'),
     gemini: getApiKeyFromBody(body, 'gemini'),
+    openrouter: getApiKeyFromBody(body, 'openrouter'),
   };
 }
 

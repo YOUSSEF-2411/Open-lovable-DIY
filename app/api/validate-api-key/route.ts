@@ -192,6 +192,49 @@ export async function POST(request: NextRequest) {
         }
         break;
 
+      case 'openrouter':
+        try {
+          // Check models endpoint using OpenRouter format
+          const response = await fetch('https://openrouter.ai/api/v1/models', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${apiKey}`,
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            isValid = true;
+          } else if (response.status === 401 || response.status === 403) {
+            error = 'Invalid OpenRouter API key';
+          } else {
+            // Try a minimal chat completion as fallback
+            const completionResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                messages: [{ role: 'user', content: 'hi' }],
+                model: 'meta-llama/llama-3.1-8b-instruct:free',
+                max_tokens: 1
+              })
+            });
+
+            if (completionResponse.ok) {
+              isValid = true;
+            } else if (completionResponse.status === 401 || completionResponse.status === 403) {
+              error = 'Invalid OpenRouter API key';
+            } else {
+              error = `Failed to validate OpenRouter API key (HTTP ${response.status})`;
+            }
+          }
+        } catch (err: any) {
+          error = err.message || 'Failed to validate OpenRouter API key';
+        }
+        break;
+
       default:
         return NextResponse.json({
           valid: false,

@@ -2035,7 +2035,7 @@ Tip: I automatically detect and install npm packages from your code imports (lik
 
   const handleFileClick = async (filePath: string) => {
     setSelectedFile(filePath);
-  // TODO: Add file content fetching logic here
+    // Optionally, fetch and preview file content in the right panel in future
   };
   const getFileIcon = (fileName: string) => {
     const ext = fileName.split('.').pop()?.toLowerCase();
@@ -2463,6 +2463,29 @@ Focus on creating a beautiful, functional website that matches the user's vision
                     </option>
                   ))}
                 </select>
+                <div className="mt-3 w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder="Custom model (e.g. openrouter/meta-llama/...)"
+                    className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/40"
+                    onKeyDown={(e) => {
+                      const target = e.target as HTMLInputElement;
+                      if (e.key === 'Enter' && target.value.trim()) {
+                        const newModel = target.value.trim();
+                        setAiModel(newModel);
+                        const params = new URLSearchParams(searchParams);
+                        params.set('model', newModel);
+                        if (sandboxData?.sandboxId) {
+                          params.set('sandbox', sandboxData.sandboxId);
+                        }
+                        router.push(`/?${params.toString()}`);
+                      }
+                    }}
+                  />
+                  <div className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm flex items-center">
+                    API keys are auto-injected from settings
+                  </div>
+                </div>
               </div>
             
             </div>
@@ -2570,8 +2593,8 @@ Focus on creating a beautiful, functional website that matches the user's vision
       {/* ✅ RESPONSIVENESS FIX: Reverted to flex-row to keep side-by-side layout */}
       <div className="flex-1 flex flex-row overflow-hidden">
         {/* Center Panel - AI Chat */}
-        {/* ✅ RESPONSIVENESS FIX: Adjusted width to be flexible on mobile (w-2/5) and fixed on large screens (lg:max-w-[400px]) */}
-        <div className={`flex flex-col border-r ${theme.border_color} ${theme.bg_card} w-2/5 lg:w-auto lg:flex-1 lg:max-w-[400px]`}>
+        {/* ✅ RESPONSIVENESS: Stack on small screens, side panel takes 100% on mobile */}
+        <div className={`flex flex-col border-r ${theme.border_color} ${theme.bg_card} w-full md:w-2/5 lg:w-auto lg:flex-1 lg:max-w-[400px]`}>
 
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-1 scrollbar-hide" ref={chatMessagesRef}>
             {chatMessages.map((msg, 
@@ -2860,7 +2883,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
 
         {/* Right Panel - Preview or Generation */}
         {/* ✅ RESPONSIVENESS FIX: Adjusted width to take remaining space */}
-        <div className="flex-1 flex flex-col overflow-hidden w-3/5 lg:w-auto">
+        <div className="flex-1 flex flex-col overflow-hidden w-full md:w-3/5 lg:w-auto">
           <div className={`px-4 py-2 ${theme.bg_card} border-b ${theme.border_color} flex 
   justify-between items-center`}>
             <div className="flex items-center gap-4">

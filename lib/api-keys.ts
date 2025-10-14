@@ -9,6 +9,7 @@ export interface ApiKeys {
   anthropic?: string;
   openai?: string;
   gemini?: string;
+  openrouter?: string;
 }
 
 export interface ApiKeyValidationResult {
@@ -119,6 +120,35 @@ export async function validateE2bApiKey(apiKey: string): Promise<ApiKeyValidatio
   }
 }
 
+
+/**
+ * Validate OpenRouter API key
+ */
+export async function validateOpenrouterApiKey(apiKey: string): Promise<ApiKeyValidationResult> {
+  // OpenRouter keys often start with "sk-or-" or "sk-or-v1-", but avoid hard failures on format
+  if (!apiKey) {
+    return { isValid: false, error: 'OpenRouter API key is required' };
+  }
+
+  try {
+    const response = await fetch('/api/validate-api-key', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider: 'openrouter', apiKey })
+    });
+
+    if (!response.ok) {
+      // Be lenient if the validation endpoint is unreachable
+      return { isValid: true };
+    }
+
+    const result = await response.json();
+    return { isValid: result.valid, error: result.error };
+  } catch (error) {
+    // If validation fails due to network/other issues, assume valid
+    return { isValid: true };
+  }
+}
 
 
 /**
