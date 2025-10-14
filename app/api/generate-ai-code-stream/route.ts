@@ -1425,6 +1425,21 @@ It's better to have 3 complete files than 10 incomplete files.`
         }
         
         console.log('\n\n[generate-ai-code-stream] Streaming complete.');
+
+        // If nothing was generated, send explicit error to client for clear diagnostics
+        if (!generatedCode || generatedCode.trim().length === 0) {
+          const diag = {
+            provider: isAnthropic ? 'anthropic' : isOpenAI ? 'openai' : 'openrouter',
+            model: actualModel,
+            hasOpenRouterKey: !!apiKeys.openrouter,
+          };
+          console.error('[generate-ai-code-stream] Empty generation from provider:', diag);
+          await sendProgress({
+            type: 'error',
+            error: `Model returned empty response. Provider=${diag.provider}, Model=${diag.model}. Check OpenRouter API key, model id, and HTTP-Referer allowlist.`,
+          });
+          return; // Do not send a misleading 'complete' event
+        }
         
         // Send any remaining conversational text
         if (conversationalBuffer.trim()) {

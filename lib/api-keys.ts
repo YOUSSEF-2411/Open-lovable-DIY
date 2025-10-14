@@ -167,7 +167,7 @@ export function getApiKey(provider: keyof ApiKeys): string | undefined {
  */
 export function hasRequiredApiKeys(): boolean {
   const keys = getStoredApiKeys();
-  return !!(keys.groq && keys.e2b);
+  return !!(keys.openrouter && keys.e2b);
 }
 
 /**
@@ -177,7 +177,7 @@ export function getMissingRequiredApiKeys(): string[] {
   const keys = getStoredApiKeys();
   const missing: string[] = [];
 
-  if (!keys.groq) missing.push('Groq');
+  if (!keys.openrouter) missing.push('OpenRouter');
   if (!keys.e2b) missing.push('E2B');
 
   return missing;
