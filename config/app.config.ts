@@ -28,26 +28,20 @@ export const appConfig = {
   // AI Model Configuration
   ai: {
     // Default AI model
-    defaultModel: 'moonshotai/kimi-k2-instruct',
+    defaultModel: 'openrouter/deepseek/deepseek-chat-v3.1:free',
     
     // Available models
     availableModels: [
-      'openai/gpt-5',
-      'openrouter/meta-llama/llama-3.1-8b-instruct:free',
-      'openrouter/anthropic/claude-3.7-sonnet',
-      'moonshotai/kimi-k2-instruct',
-      'anthropic/claude-sonnet-4-20250514',
-      'google/gemini-2.5-pro'
+      'openrouter/deepseek/deepseek-chat-v3.1:free',
+      'openrouter/z-ai/glm-4.5-air:free',
+      'openrouter/moonshotai/kimi-k2:free'
     ],
     
     // Model display names
     modelDisplayNames: {
-      'openai/gpt-5': 'GPT-5',
-      'openrouter/meta-llama/llama-3.1-8b-instruct:free': 'OpenRouter · Llama 3.1 8B (free)',
-      'openrouter/anthropic/claude-3.7-sonnet': 'OpenRouter · Claude 3.7 Sonnet',
-      'moonshotai/kimi-k2-instruct': 'Kimi K2 Instruct',
-      'anthropic/claude-sonnet-4-20250514': 'Sonnet 4',
-      'google/gemini-2.5-pro': 'Gemini 2.5 Pro'
+      'openrouter/deepseek/deepseek-chat-v3.1:free': 'OpenRouter · DeepSeek Chat v3.1 (free)',
+      'openrouter/z-ai/glm-4.5-air:free': 'OpenRouter · GLM 4.5 Air (free)',
+      'openrouter/moonshotai/kimi-k2:free': 'OpenRouter · Kimi K2 (free)'
     },
     
     // Temperature settings for non-reasoning models

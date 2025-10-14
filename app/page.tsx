@@ -2462,43 +2462,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
                     </option>
                   ))}
                 </select>
-                <div className="mt-3 w-full max-w-xl grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    placeholder="Custom model (e.g. openrouter/meta-llama/...)"
-                    className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/40"
-                    onKeyDown={(e) => {
-                      const target = e.target as HTMLInputElement;
-                      if (e.key === 'Enter' && target.value.trim()) {
-                        const newModel = target.value.trim();
-                        setAiModel(newModel);
-                        const params = new URLSearchParams(searchParams);
-                        params.set('model', newModel);
-                        if (sandboxData?.sandboxId) {
-                          params.set('sandbox', sandboxData.sandboxId);
-                        }
-                        router.push(`/?${params.toString()}`);
-                      }
-                    }}
-                  />
-                  <input
-                    type="text"
-                    placeholder="OpenRouter model (settings value used if set)"
-                    defaultValue={''}
-                    className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/40"
-                    onKeyDown={(e) => {
-                      const target = e.target as HTMLInputElement;
-                      if (e.key === 'Enter' && target.value.trim()) {
-                        const newModel = `openrouter/${target.value.trim()}`;
-                        setAiModel(newModel);
-                        const params = new URLSearchParams(searchParams);
-                        params.set('model', newModel);
-                        if (sandboxData?.sandboxId) params.set('sandbox', sandboxData.sandboxId);
-                        router.push(`/?${params.toString()}`);
-                      }
-                    }}
-                  />
-                </div>
+                {/* Removed manual model inputs: fixed to OpenRouter curated list */}
               </div>
             
             </div>
@@ -2509,7 +2473,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
       {/* Main Header */}
       <div className={`px-3 sm:px-4 py-3 sm:py-4 border-b ${theme.border_color} flex items-center justify-between ${theme.bg_card}`}>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <div className={`w-8 h-8 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'} rounded-lg flex items-center justify-center border ${theme.border_color}`}>
               <span className={`font-bold text-lg ${theme.text_main}`}>YA</span>
             </div>
@@ -2559,7 +2523,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
             onClick={() => createSandbox()}
             size="sm"
             title="Create new sandbox"
-            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'} transition-all duration-200 shadow-sm hover:shadow-md`}
+            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'} transition-all duration-200 shadow-sm hover:shadow-md min-w-[40px]`}
           >
          
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -2574,7 +2538,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
             title="Re-apply last generation"
             disabled={!conversationContext.lastGeneratedCode ||
   !sandboxData}
-            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700 disabled:bg-gray-900/50' : 'bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:bg-gray-100/50'} transition-all duration-200 shadow-sm hover:shadow-md`}
+            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700 disabled:bg-gray-900/50' : 'bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:bg-gray-100/50'} transition-all duration-200 shadow-sm hover:shadow-md min-w-[40px]`}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -2587,7 +2551,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
             disabled={!sandboxData}
             size="sm"
             title="Download your Vite app as ZIP"
-            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700 disabled:bg-gray-900/50' : 'bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:bg-gray-100/50'} transition-all duration-200 shadow-sm hover:shadow-md`}
+            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700 disabled:bg-gray-900/50' : 'bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:bg-gray-100/50'} transition-all duration-200 shadow-sm hover:shadow-md min-w-[40px]`}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           
@@ -2896,10 +2860,10 @@ Focus on creating a beautiful, functional website that matches the user's vision
         {/* Right Panel - Preview or Generation */}
         {/* ✅ RESPONSIVENESS FIX: Adjusted width to take remaining space */}
         <div className="flex-1 flex flex-col overflow-hidden w-full md:w-3/5 lg:w-auto">
-          <div className={`px-4 py-2 ${theme.bg_card} border-b ${theme.border_color} flex 
-  justify-between items-center`}>
+          <div className={`px-3 sm:px-4 py-2 ${theme.bg_card} border-b ${theme.border_color} flex 
+            justify-between items-center`}>
             <div className="flex items-center gap-4">
-              <div className={`flex ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'} rounded-lg p-1`}>
+              <div className={`flex ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'} rounded-lg p-1 overflow-x-auto no-scrollbar`}> 
                 <button
                   onClick={() => setActiveTab('generation')}
                   className={`p-2 rounded-md transition-all ${

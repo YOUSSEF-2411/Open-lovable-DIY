@@ -207,7 +207,7 @@ export function ApiKeysSettings({ onClose }: ApiKeysSettingsProps) {
           <div>
             <h3 className="text-lg font-semibold mb-3">Optional API Keys</h3>
             <p className="text-sm text-gray-600 mb-3">
-              Add these for additional AI model options
+              OpenRouter models are enabled below. You no longer need to type model names.
             </p>
             <div className="space-y-4">
               <ApiKeyInput
@@ -246,19 +246,26 @@ export function ApiKeysSettings({ onClose }: ApiKeysSettingsProps) {
                 getApiUrl="https://openrouter.ai/keys"
               />
 
-              {/* Custom model name for OpenRouter */}
+              {/* Predefined OpenRouter models (no manual typing required) */}
               <div className="space-y-2">
-                <Label htmlFor="openrouterModel" className="text-sm font-medium">
-                  OpenRouter Custom Model
-                </Label>
-                <Input
-                  id="openrouterModel"
-                  type="text"
-                  placeholder="e.g. meta-llama/llama-3.1-8b-instruct:free"
-                  value={localKeys.openrouterModel || ''}
-                  onChange={(e) => handleKeyChange('openrouterModel', e.target.value)}
-                />
-                <p className="text-xs text-gray-600">Leave blank to use the selector or paste any OpenRouter model identifier.</p>
+                <Label className="text-sm font-medium">Available OpenRouter Models</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  {[
+                    { id: 'openrouter/deepseek/deepseek-chat-v3.1:free', label: 'DeepSeek v3.1 (free)' },
+                    { id: 'openrouter/z-ai/glm-4.5-air:free', label: 'GLM 4.5 Air (free)' },
+                    { id: 'openrouter/moonshotai/kimi-k2:free', label: 'Kimi K2 (free)' },
+                  ].map(m => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => setApiKey('openrouterModel', m.id.replace('openrouter/', ''))}
+                      className="text-left px-3 py-2 rounded-lg border bg-white hover:bg-gray-50 text-gray-800 text-sm transition-colors"
+                    >
+                      {m.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-600">اختر نموذج OpenRouter وسيتم استخدامه تلقائياً.</p>
               </div>
 
               <ApiKeyInput
@@ -272,6 +279,32 @@ export function ApiKeysSettings({ onClose }: ApiKeysSettingsProps) {
                 validationResult={validationResults.gemini}
                 getApiUrl="https://aistudio.google.com/app/apikey"
               />
+
+              {/* Deploy tokens */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <ApiKeyInput
+                  label="Vercel Access Token"
+                  description="For one-click deploy to Vercel"
+                  placeholder="vercel-personal-access-token"
+                  value={localKeys.vercel || ''}
+                  onChange={(value) => handleKeyChange('vercel', value)}
+                  onValidate={async () => { setApiKey('vercel', (localKeys.vercel || '')); }}
+                  isValidating={false}
+                  validationResult={undefined}
+                  getApiUrl="https://vercel.com/account/tokens"
+                />
+                <ApiKeyInput
+                  label="Netlify Access Token"
+                  description="For one-click deploy to Netlify"
+                  placeholder="netlify-personal-access-token"
+                  value={localKeys.netlify || ''}
+                  onChange={(value) => handleKeyChange('netlify', value)}
+                  onValidate={async () => { setApiKey('netlify', (localKeys.netlify || '')); }}
+                  isValidating={false}
+                  validationResult={undefined}
+                  getApiUrl="https://app.netlify.com/user/applications/personal-access-tokens"
+                />
+              </div>
             </div>
           </div>
         </div>

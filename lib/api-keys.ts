@@ -11,6 +11,8 @@ export interface ApiKeys {
   gemini?: string;
   openrouter?: string;
   openrouterModel?: string;
+  vercel?: string;
+  netlify?: string;
 }
 
 export interface ApiKeyValidationResult {

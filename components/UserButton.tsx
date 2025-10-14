@@ -122,7 +122,7 @@ export function UserButton({ className = '' }: UserButtonProps) {
                 className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100/50 flex items-center gap-3 transition-colors"
               >
                 <Settings className="w-4 h-4" />
-                API Keys Settings
+                API Keys & Deploy Settings
               </button>
               
               <button
