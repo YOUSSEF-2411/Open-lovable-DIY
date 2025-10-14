@@ -23,6 +23,10 @@ const openai = createOpenAI({
 const openrouter = createOpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
   baseURL: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1',
+  headers: {
+    'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    'X-Title': 'Youssef AI'
+  }
 });
 
 // Schema for the AI's search plan - not file selection!
@@ -108,7 +112,8 @@ export async function POST(request: NextRequest) {
         aiModel = openai(model.replace('openai/', ''));
       }
     } else if (model.startsWith('openrouter/') || openrouterModel) {
-      aiModel = openrouter((openrouterModel || model).replace('openrouter/', ''));
+      const chosen = (openrouterModel || model).replace('openrouter/', '') || 'meta-llama/llama-3.1-8b-instruct:free';
+      aiModel = openrouter(chosen);
     } else {
       // Default to groq if model format is unclear
       aiModel = groq(model);

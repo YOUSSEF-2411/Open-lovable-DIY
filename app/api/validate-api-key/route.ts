@@ -199,7 +199,9 @@ export async function POST(request: NextRequest) {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${apiKey}`,
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+              'X-Title': 'Youssef AI'
             }
           });
 
@@ -213,7 +215,9 @@ export async function POST(request: NextRequest) {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+                'X-Title': 'Youssef AI'
               },
               body: JSON.stringify({
                 messages: [{ role: 'user', content: 'hi' }],

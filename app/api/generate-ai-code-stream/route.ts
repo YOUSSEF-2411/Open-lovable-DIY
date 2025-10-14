@@ -30,6 +30,10 @@ function createAIClients(apiKeys: {
   const openrouter = apiKeys.openrouter ? createOpenAI({
     apiKey: apiKeys.openrouter,
     baseURL: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1',
+    headers: {
+      'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+      'X-Title': 'Youssef AI'
+    }
   }) : null;
 
   return { groq, anthropic, openai, openrouter };
@@ -1200,10 +1204,15 @@ CRITICAL: When files are provided in the context:
           modelProvider = groq;
         }
 
-        const actualModel = userProvidedOpenRouterModel ? userProvidedOpenRouterModel :
-                           isAnthropic ? model.replace('anthropic/', '') :
-                           isOpenRouter ? model.replace('openrouter/', '') :
-                           (model === 'openai/gpt-5') ? 'gpt-5' : model;
+        let actualModel = userProvidedOpenRouterModel ? userProvidedOpenRouterModel :
+                         isAnthropic ? model.replace('anthropic/', '') :
+                         isOpenRouter ? model.replace('openrouter/', '') :
+                         (model === 'openai/gpt-5') ? 'gpt-5' : model;
+
+        // If using OpenRouter and model is still empty/invalid, fall back to a safe default
+        if (isOpenRouter && (!actualModel || typeof actualModel !== 'string' || actualModel.trim().length === 0)) {
+          actualModel = 'meta-llama/llama-3.1-8b-instruct:free';
+        }
 
         // Make streaming API call with appropriate provider
         const streamOptions: any = {
