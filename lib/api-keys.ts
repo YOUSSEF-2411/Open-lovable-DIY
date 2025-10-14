@@ -10,6 +10,7 @@ export interface ApiKeys {
   openai?: string;
   gemini?: string;
   openrouter?: string;
+  openrouterModel?: string;
 }
 
 export interface ApiKeyValidationResult {
@@ -17,7 +18,7 @@ export interface ApiKeyValidationResult {
   error?: string;
 }
 
-const API_KEYS_STORAGE_KEY = 'open-lovable-api-keys';
+const API_KEYS_STORAGE_KEY = 'youssef-ai-api-keys';
 
 /**
  * Get API keys from localStorage

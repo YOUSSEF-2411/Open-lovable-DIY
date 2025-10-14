@@ -155,9 +155,9 @@ export function ApiKeysSettings({ onClose }: ApiKeysSettingsProps) {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>API Keys Configuration</CardTitle>
+        <CardTitle>Youssef AI - API Configuration</CardTitle>
         <CardDescription>
-          Configure your API keys to use Open Lovable. All keys are stored locally in your browser.
+          Configure your API keys for Youssef AI. All keys are stored locally in your browser.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -245,6 +245,21 @@ export function ApiKeysSettings({ onClose }: ApiKeysSettingsProps) {
                 validationResult={validationResults.openrouter}
                 getApiUrl="https://openrouter.ai/keys"
               />
+
+              {/* Custom model name for OpenRouter */}
+              <div className="space-y-2">
+                <Label htmlFor="openrouterModel" className="text-sm font-medium">
+                  OpenRouter Custom Model
+                </Label>
+                <Input
+                  id="openrouterModel"
+                  type="text"
+                  placeholder="e.g. meta-llama/llama-3.1-8b-instruct:free"
+                  value={localKeys.openrouterModel || ''}
+                  onChange={(e) => handleKeyChange('openrouterModel', e.target.value)}
+                />
+                <p className="text-xs text-gray-600">Leave blank to use the selector or paste any OpenRouter model identifier.</p>
+              </div>
 
               <ApiKeyInput
                 label="Google Gemini API Key"

@@ -70,7 +70,7 @@ function AISandboxPage() {
   const router = useRouter();
   const [aiModel, setAiModel] = useState(() => {
     const modelParam = searchParams.get('model');
-    return appConfig.ai.availableModels.includes(modelParam || '') ? modelParam! : appConfig.ai.defaultModel;
+    return modelParam || appConfig.ai.defaultModel;
   });
   const [showHomeScreen, setShowHomeScreen] = useState(true);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['app', 'src', 'src/components']));
@@ -1469,7 +1469,7 @@ Tip: I automatically detect and install npm packages from your code imports (lik
               src={sandboxData.url}
       
               className="w-full h-full border-none"
-              title="Open Lovable Sandbox"
+              title="Youssef AI Sandbox"
               allow="clipboard-write"
               sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
             />
@@ -2337,9 +2337,9 @@ Focus on creating a beautiful, functional website that matches the user's vision
          
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center border border-white/20">
-                <span className="text-white font-bold text-lg">❤️</span>
+                <span className="text-white font-bold text-lg">YA</span>
               </div>
-              <span className="text-white font-semibold text-lg">Open-Lovable</span>
+              <span className="text-white font-semibold text-lg">Youssef AI</span>
             </div>
          
             <div className="flex items-center gap-3 sm:gap-4">
@@ -2355,11 +2355,10 @@ Focus on creating a beautiful, functional website that matches the user's vision
               {/* Enhanced Lovable-style Header */}
               
               <div className="text-center">
-                <h1 className="text-[2.5rem] sm:text-[3.5rem] lg:text-[4.2rem] text-center text-white font-bold tracking-tight leading-[1.1] animate-[fadeIn_0.8s_ease-out] px-4">
-                  <span className="block sm:inline">Build something </span>
-                  <span className="bg-gradient-to-r from-gray-300 via-white to-gray-400 bg-clip-text text-transparent whitespace-nowrap">
-                    ❤️ Open-Lovable
-     
+                <h1 className="text-[2rem] sm:text-[3rem] lg:text-[3.6rem] text-center text-white font-bold tracking-tight leading-[1.1] animate-[fadeIn_0.8s_ease-out] px-4">
+                  <span className="block sm:inline">Build with </span>
+                  <span className="bg-gradient-to-r from-purple-300 via-white to-purple-400 bg-clip-text text-transparent whitespace-nowrap">
+                    Youssef AI
                   </span>
                 </h1>
                 <motion.p
@@ -2440,7 +2439,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
               {/* Enhanced Model Selector */}
           
               <div className="mt-10 flex flex-col items-center justify-center animate-[fadeIn_1s_ease-out] px-4">
-                <div className="text-white/60 text-sm mb-3">Powered by</div>
+              <div className="text-white/60 text-sm mb-3">Model provider</div>
                 <select
                   value={aiModel}
                   onChange={(e) => {
@@ -2482,9 +2481,23 @@ Focus on creating a beautiful, functional website that matches the user's vision
                       }
                     }}
                   />
-                  <div className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm flex items-center">
-                    API keys are auto-injected from settings
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="OpenRouter model (settings value used if set)"
+                    defaultValue={''}
+                    className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/40"
+                    onKeyDown={(e) => {
+                      const target = e.target as HTMLInputElement;
+                      if (e.key === 'Enter' && target.value.trim()) {
+                        const newModel = `openrouter/${target.value.trim()}`;
+                        setAiModel(newModel);
+                        const params = new URLSearchParams(searchParams);
+                        params.set('model', newModel);
+                        if (sandboxData?.sandboxId) params.set('sandbox', sandboxData.sandboxId);
+                        router.push(`/?${params.toString()}`);
+                      }
+                    }}
+                  />
                 </div>
               </div>
             
@@ -2494,15 +2507,14 @@ Focus on creating a beautiful, functional website that matches the user's vision
       )}
       
       {/* Main Header */}
-      <div className={`px-4 py-4 border-b ${theme.border_color} flex items-center justify-between ${theme.bg_card}`}>
+      <div className={`px-3 sm:px-4 py-3 sm:py-4 border-b ${theme.border_color} flex items-center justify-between ${theme.bg_card}`}>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className={`w-8 h-8 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'} rounded-lg flex items-center justify-center border ${theme.border_color}`}>
-           
-              <span className={`font-bold text-lg ${theme.text_main}`}>❤️</span>
+              <span className={`font-bold text-lg ${theme.text_main}`}>YA</span>
             </div>
             {/* ✅ RESPONSIVENESS: Hide text on small screens */}
-            <span className={`font-semibold text-lg ${theme.text_main} hidden sm:inline`}>Open-Lovable</span>
+            <span className={`font-semibold text-lg ${theme.text_main} hidden sm:inline`}>Youssef AI</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -2512,7 +2524,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
             onClick={toggleTheme}
             size="sm"
             title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'} transition-colors duration-200`}
+            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'} transition-all duration-200 shadow-sm hover:shadow-md`}
           >
             {isDarkMode ? <FaSun className="w-4 h-4 text-yellow-300" /> : <FaMoon className="w-4 h-4 text-gray-600" />}
           </Button>
@@ -2533,7 +2545,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
   }
               router.push(`/?${params.toString()}`);
   }}
-            className={`px-3 py-1.5 text-sm ${isDarkMode ? 'bg-gray-800 text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'} border rounded-[10px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition-colors duration-200 hidden md:inline-block`}
+            className={`px-3 py-1.5 text-sm ${isDarkMode ? 'bg-gray-800 text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'} border rounded-[10px] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition-all duration-200 hidden md:inline-block`}
           >
             {appConfig.ai.availableModels.map(model => (
               <option key={model} value={model} className={isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}>
@@ -2547,7 +2559,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
             onClick={() => createSandbox()}
             size="sm"
             title="Create new sandbox"
-            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'} transition-colors duration-200`}
+            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'} transition-all duration-200 shadow-sm hover:shadow-md`}
           >
          
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -2562,7 +2574,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
             title="Re-apply last generation"
             disabled={!conversationContext.lastGeneratedCode ||
   !sandboxData}
-            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700 disabled:bg-gray-900/50' : 'bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:bg-gray-100/50'} transition-colors duration-200`}
+            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700 disabled:bg-gray-900/50' : 'bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:bg-gray-100/50'} transition-all duration-200 shadow-sm hover:shadow-md`}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -2575,7 +2587,7 @@ Focus on creating a beautiful, functional website that matches the user's vision
             disabled={!sandboxData}
             size="sm"
             title="Download your Vite app as ZIP"
-            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700 disabled:bg-gray-900/50' : 'bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:bg-gray-100/50'} transition-colors duration-200`}
+            className={`${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700 disabled:bg-gray-900/50' : 'bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:bg-gray-100/50'} transition-all duration-200 shadow-sm hover:shadow-md`}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           

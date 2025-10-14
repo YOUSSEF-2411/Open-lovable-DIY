@@ -55,7 +55,7 @@ const searchPlanSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, manifest, model = 'openai/gpt-oss-20b' } = await request.json();
+    const { prompt, manifest, model = 'openai/gpt-oss-20b', openrouterModel } = await request.json();
     
     console.log('[analyze-edit-intent] Request received');
     console.log('[analyze-edit-intent] Prompt:', prompt);
@@ -107,8 +107,8 @@ export async function POST(request: NextRequest) {
       } else {
         aiModel = openai(model.replace('openai/', ''));
       }
-    } else if (model.startsWith('openrouter/')) {
-      aiModel = openrouter(model.replace('openrouter/', ''));
+    } else if (model.startsWith('openrouter/') || openrouterModel) {
+      aiModel = openrouter((openrouterModel || model).replace('openrouter/', ''));
     } else {
       // Default to groq if model format is unclear
       aiModel = groq(model);

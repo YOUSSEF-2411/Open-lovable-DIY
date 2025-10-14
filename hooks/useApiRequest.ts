@@ -49,6 +49,8 @@ export function useApiRequest() {
       openaiApiKey: apiKeys.openai,
       openrouterApiKey: apiKeys.openrouter,
       geminiApiKey: apiKeys.gemini,
+      // Pass custom OpenRouter model if present in settings
+      openrouterModel: apiKeys.openrouterModel,
     };
 
     return makeRequest(url, {

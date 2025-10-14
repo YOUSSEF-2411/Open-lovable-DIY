@@ -82,7 +82,7 @@ declare global {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { prompt, model = 'openai/gpt-oss-20b', context, isEdit = false } = body;
+    const { prompt, model = 'openai/gpt-oss-20b', context, isEdit = false, openrouterModel: openrouterModelFromBody } = body;
 
     // Get API keys from headers or body, with fallback to environment variables
     const apiKeysFromHeaders = getAllApiKeysFromHeaders(request);
@@ -1172,9 +1172,10 @@ CRITICAL: When files are provided in the context:
         const packagesToInstall: string[] = [];
         
         // Determine which provider to use based on model
+        const userProvidedOpenRouterModel = openrouterModelFromBody || (apiKeys.openrouter ? (body?.model?.startsWith('openrouter/') ? body.model.replace('openrouter/', '') : null) : null);
         const isAnthropic = model.startsWith('anthropic/');
         const isOpenAI = model.startsWith('openai/gpt-5');
-        const isOpenRouter = model.startsWith('openrouter/');
+        const isOpenRouter = model.startsWith('openrouter/') || !!userProvidedOpenRouterModel;
 
         let modelProvider;
         if (isAnthropic) {
@@ -1199,7 +1200,8 @@ CRITICAL: When files are provided in the context:
           modelProvider = groq;
         }
 
-        const actualModel = isAnthropic ? model.replace('anthropic/', '') :
+        const actualModel = userProvidedOpenRouterModel ? userProvidedOpenRouterModel :
+                           isAnthropic ? model.replace('anthropic/', '') :
                            isOpenRouter ? model.replace('openrouter/', '') :
                            (model === 'openai/gpt-5') ? 'gpt-5' : model;
 
